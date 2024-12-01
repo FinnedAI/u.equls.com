@@ -1,20 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticker</title>
-</head>
-<body>
-    <h1>Hello, <%= user.ticker %>!</h1>
-    <p>Here is your user object:</p>
-    <code>
-        <%= JSON.stringify(user, null, "\t") %>
-    </code>
-    <br />
-    <p>Your stats are as follows:</p>
-    <code>
-        <%= JSON.stringify(stats, null, "\t") %>
-    </code>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= user.ticker.toUpperCase() %> on EQULS</title>
+    <link href="/styles/globals.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script>
+      tailwind.config = {
+        darkMode: ["class", '[data-theme="dark"]'],
+        theme: {
+          extend: {
+            colors: {
+              border: "var(--border)",
+              input: "var(--input)",
+              ring: "var(--ring)",
+              background: "var(--background)",
+              foreground: "var(--foreground)",
+              primary: {
+                DEFAULT: "var(--primary)",
+                foreground: "var(--primary-foreground)",
+              },
+              secondary: {
+                DEFAULT: "var(--secondary)",
+                foreground: "var(--secondary-foreground)",
+              },
+              destructive: {
+                DEFAULT: "var(--destructive)",
+                foreground: "var(--destructive-foreground)",
+              },
+              muted: {
+                DEFAULT: "var(--muted)",
+                foreground: "var(--muted-foreground)",
+              },
+              accent: {
+                DEFAULT: "var(--accent)",
+                foreground: "var(--accent-foreground)",
+              },
+              popover: {
+                DEFAULT: "var(--popover)",
+                foreground: "var(--popover-foreground)",
+              },
+              card: {
+                DEFAULT: "var(--card)",
+                foreground: "var(--card-foreground)",
+              },
+            },
+            borderRadius: {
+              lg: "var(--radius)",
+              md: "calc(var(--radius) - 2px)",
+              sm: "calc(var(--radius) - 4px)",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-background text-foreground">
+    <div class="min-h-screen flex items-center justify-center bg-profile-bg">
+      <div class="bg-secondary rounded-lg shadow-xl p-6 max-w-2xl w-full mx-4">
+        <!-- Stats Link Header -->
+        <div
+          class="flex justify-between items-center mb-6 bg-[#472b80] border-primary border py-2 px-4 rounded-md"
+        >
+          <div class="flex items-center gap-3">
+            <img src="/logo-thin.png" alt="Logo" class="h-6 w-6" />
+            <span class="text-foreground"
+              >See full stats, open picks, and more on the EQULS app</span
+            >
+          </div>
+          <a
+            href="finnedai://user/<%= user.ticker %>"
+            class="px-4 py-1 bg-primary text-foreground rounded-md hover:bg-[#7250cc] transition-colors"
+            >Open</a
+          >
+        </div>
+
+        <!-- Profile Info Section -->
+        <div class="flex gap-6 mb-4">
+          <img
+            src="<%= user.pictureURL %>"
+            alt="<%= user.ticker %>"
+            class="w-24 h-24 rounded-lg object-cover border-2 border-border rounded-md p-2"
+          />
+          <div class="flex flex-col gap-2">
+            <div class="flex flex-row items-center gap-2">
+              <h1 class="text-2xl font-bold text-profile-primary">
+                <%= user.ticker.toUpperCase() %>
+                <span class="text-lg"
+                  >(<%= stats?.placedStats?.overallStats?.wins?.allTime?.sum %>
+                  - <%= stats?.placedStats?.overallStats?.losses?.allTime?.sum
+                  %> - <%=
+                  stats?.placedStats?.overallStats?.pushes?.allTime?.sum %>
+                  )</span
+                >
+              </h1>
+            </div>
+            <p class="text-muted-foreground text-sm">
+              <%= user.bio || "No bio yet" %>
+            </p>
+          </div>
+        </div>
+
+        <!-- Social and Metrics Section -->
+        <div class="flex items-center gap-4">
+          <!-- Social Icons -->
+          <div class="flex flex-col gap-3 w-24">
+            <% if (user.twitter) { %>
+            <a href="https://twitter.com/<%= user.twitter %>" target="_blank">
+              <ion-icon
+                name="logo-twitter"
+                class="w-6 h-6 text-muted-foreground hover:text-[#1DA1F2]"
+              ></ion-icon>
+            </a>
+            <% } %> <% if (user.tiktok) { %>
+            <a href="https://tiktok.com/@<%= user.tiktok %>" target="_blank">
+              <ion-icon
+                name="logo-tiktok"
+                class="w-6 h-6 text-muted-foreground hover:text-[#000000]"
+              ></ion-icon>
+            </a>
+            <% } %> <% if (user.instagram) { %>
+            <a
+              href="https://instagram.com/<%= user.instagram %>"
+              target="_blank"
+            >
+              <ion-icon
+                name="logo-instagram"
+                class="w-6 h-6 text-muted-foreground hover:text-[#E4405F]"
+              ></ion-icon>
+            </a>
+            <% } %>
+          </div>
+
+          <!-- Metrics Grid -->
+          <div class="grid grid-cols-4 gap-x-8 gap-y-4">
+            <div class="text-center">
+              <div class="text-muted-foreground text-base">Profit</div>
+              <div
+                class="text-profile-primary font-bold text-2xl <%= stats?.placedStats?.overallStats?.profitLoss?.allTime?.sum > 0 ? 'text-green-600' : 'text-red-600' %>"
+              >
+                <% const profit =
+                stats?.placedStats?.overallStats?.profitLoss?.allTime?.sum || 0;
+                const profitDisplay = profit > 0 ? '+' + profit.toFixed(2) :
+                profit.toFixed(2); %> <%= profitDisplay %>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-muted-foreground text-base">ROI (%)</div>
+              <div
+                class="text-profile-primary font-bold text-2xl <%= stats?.placedStats?.overallStats?.roi?.allTime?.value > 0 ? 'text-green-600' : 'text-red-600' %>"
+              >
+                <% const roi =
+                stats?.placedStats?.overallStats?.roi?.allTime?.value || 0;
+                const roiDisplay = roi > 0 ? '+' + (roi * 100).toFixed(2) : (roi
+                * 100).toFixed(2); %> <%= roiDisplay %>%
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-muted-foreground text-base">Avg. Odds</div>
+              <div class="text-profile-primary font-bold text-2xl">
+                <%=
+                stats?.placedStats?.overallStats?.averageOdds?.allTime?.value.toFixed(2)
+                %>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-muted-foreground text-base">Streak</div>
+              <div
+                class="text-profile-primary font-bold flex items-center justify-center text-2xl"
+              >
+                <% if (stats?.placedStats?.overallStats?.streak?.type === 'won')
+                { %>
+                <ion-icon name="flame" class="text-orange-600 mr-1"></ion-icon>
+                <% } else if (stats?.placedStats?.overallStats?.streak?.type ===
+                'lost') { %>
+                <ion-icon name="snow" class="text-blue-300 mr-1"></ion-icon>
+                <% } %> <%= stats?.placedStats?.overallStats?.streak?.count || 0
+                %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

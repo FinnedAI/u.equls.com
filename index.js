@@ -8,6 +8,8 @@ dotenv.config(); // Load environment variables from a .env file
 const app = express();
 const port = 4000;
 
+app.use(express.static(path.resolve("public")));
+
 // Connect to MongoDB
 let db, users, stats;
 
