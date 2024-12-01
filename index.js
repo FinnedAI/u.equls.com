@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config(); // Load environment variables from a .env file
 
 const app = express();
-const port = 3000;
+const port = 4000;
 
 // Connect to MongoDB
 let db, users, stats;
