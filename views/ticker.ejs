@@ -79,6 +79,7 @@
           </div>
           <a
             href="finnedai://user/<%= user.ticker %>"
+            onclick="openProfile(event, '<%= user.ticker %>')"
             class="px-4 py-1 bg-primary text-foreground rounded-md hover:bg-[#7250cc] transition-colors"
             >Open</a
           >
@@ -192,5 +193,20 @@
         </div>
       </div>
     </div>
+    <script>
+      function openProfile(event, ticker) {
+        event.preventDefault();
+        const appUrl = `equls://user/${ticker}`;
+        const webFallbackUrl = `https://apps.apple.com/us/app/finnedai/id6670265981`; // App Store fallback URL
+        
+        // Try to open the app first
+        window.location.href = appUrl;
+        
+        // If app doesn't open within 1 second, redirect to web fallback
+        setTimeout(() => {
+          window.location.href = webFallbackUrl;
+        }, 1000);
+      }
+    </script>
   </body>
 </html>
