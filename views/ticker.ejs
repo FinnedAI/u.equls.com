@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticker</title>
+</head>
+<body>
+    <h1>Hello, <%= user.ticker %>!</h1>
+    <p>Here is your user object:</p>
+    <code>
+        <%= JSON.stringify(user, null, "\t") %>
+    </code>
+    <br />
+    <p>Your stats are as follows:</p>
+    <code>
+        <%= JSON.stringify(stats, null, "\t") %>
+    </code>
+</body>
+</html>
